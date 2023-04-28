@@ -9,7 +9,8 @@ const app = express();
 app.set ("view engine","ejs");
 
 app.use(express.static('public'));
-
+app.use(express.urlencoded({extended:true})) //obje olduğu için : kullandık // urlencoded url'deki data'yı okumayı sağlıyor
+app.use(express.json());//URL'de kullanıcının girdiği veriyi JSON formatına çeviriyor
 //ROUTES
 app.get('/', (req, res) => {
  res.render('index');
@@ -19,6 +20,11 @@ app.get('/about', (req, res) => {
  });
  app.get('/add', (req, res) => {
   res.render('add.ejs');
+ });
+//photos dediğimiz kısım add sayfasında yönlendirdiğimiz için (action:"/photos")
+ app.post('/photos', (req, res) => {
+  console.log(req.body);
+  res.redirect('/')
  });
 
 const port = 3000;
