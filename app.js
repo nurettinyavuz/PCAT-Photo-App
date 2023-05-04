@@ -27,13 +27,22 @@ app.get('/', async(req, res) => {
   });
 });
 
+app.get('/photos/:id', async(req, res) => {
+// Id'yi kullanarak fotoğrafları birbirinden ayırdık
+const photo=await Photo.findById(req.params.id); //photo.ejs sayfasında <%= photo.title %> burada yazan photo kısmı const photo olarak tanımladığımız için
+res.render('photo',{ //photo yazan kısım photo.ejs sayfasını temsil eder
+  photo
+})
+});
+
 app.get('/about', (req, res) => {
   res.render('about');
 });
 app.get('/add', (req, res) => {
   res.render('add.ejs');
 });
-//photos dediğimiz kısım add sayfasında yönlendirdiğimiz için (action:"/photos")
+
+//photos dediğimiz kısım add.ejs sayfasında yönlendirdiğimiz için (action:"/photos" yazdığımız yer)
 app.post('/photos', async (req, res) => {
   await Photo.create(req.body);
   res.redirect('/'); //Kullanıcı mesajı gönderdikten sonra açılacak sayfayı gösterir
@@ -46,7 +55,7 @@ app.listen(port, () => {
 
 //package.json dosyasının içinde scriptin içine start ekliyoruz ve npm start dediğimiz nodemon kullanarak çalıştırıyor
 //Nodemon amacı her değişiklikte otomatik olarak kaydediyor ve tekrardan başlatıyor bu da zamandan kazandırıyor
-//request ile response arasında yapılır tüm işlemler (middleware)
+//request ile response arasında yapılır tüm işlemler (middleware) 
 
 // pcat-test-db
 
