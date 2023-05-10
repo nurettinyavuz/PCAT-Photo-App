@@ -25,7 +25,8 @@ app.use(express.json()); //URL'de kullanıcının girdiği veriyi JSON formatın
 app.use(fileUpload());
 
 //ROUTES
-app.get('/', async (req, res) => {//.sort('-dateCreated') bu kısım yeni ekleneni başa yazar ana sayfada
+app.get('/', async (req, res) => {
+  //.sort('-dateCreated') bu kısım yeni ekleneni başa yazar ana sayfada
   const photos = await Photo.find({}).sort('-dateCreated'); //Fotoğrafları yakaladık //asenkron kullanmamızın nedeni işlem bitene kadar beklememesi lazım daha hızlı çalışması için çünkü zaman alan bir işlem
   res.render('index', {
     photos,
@@ -50,14 +51,10 @@ app.get('/add', (req, res) => {
 
 //photos dediğimiz kısım add.ejs sayfasında yönlendirdiğimiz için (action:"/photos" yazdığımız yer)
 app.post('/photos', async (req, res) => {
-  /* 
-  console.log(req.files.image); //image name adı //express-fileupload'dan dökümandan bak
-  await Photo.create(req.body);
-  res.redirect('/'); //Kullanıcı mesajı gönderdikten sonra açılacak sayfayı gösterir
-*/
   const uploadDir = 'Public/uploads';
   //Klasörün olup olmadığını kontrol ediyoruz eğer klasör yoksa klasör oluşturacak varsa aşağıdan devam edecek
-  if (!fs.existsSync(uploadDir)) { //Public/uploads klasörünün zaten var olup olmadığı kontrol edilir. (! işareti de )
+  if (!fs.existsSync(uploadDir)) {
+    //Public/uploads klasörünün zaten var olup olmadığı kontrol edilir. (! işareti de )
     fs.mkdirSync(uploadDir); //Klasör yoksa, fs.mkdirSync yöntemi kullanılarak bu klasör oluşturulur
   }
 
@@ -72,8 +69,6 @@ app.post('/photos', async (req, res) => {
     res.redirect('/');
   });
 });
-
-
 
 const port = 3000;
 app.listen(port, () => {
