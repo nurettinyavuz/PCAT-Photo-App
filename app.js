@@ -58,7 +58,7 @@ app.post('/photos', async (req, res) => {
     fs.mkdirSync(uploadDir); //Klasör yoksa, fs.mkdirSync yöntemi kullanılarak bu klasör oluşturulur
   }
 
-  let uploadeImage = req.files.image;
+  let uploadeImage = req.files.image;//image yazmamızın nedeni yüklediğimiz kısmın name'nin image olması (add.ejs'de)
   let uploadPath = __dirname + '/Public/uploads/' + uploadeImage.name; //Yüklenen fotoğraflar Public klasöründe uploads dosyası oluşturur ve içine yüklenir, uploadeImage.name ise dosyanın adı oluşturulur
   //uploads'ın sağına  / işareti koymazsak dosya yolunu bulamaz
   uploadeImage.mv(uploadPath, async () => {
