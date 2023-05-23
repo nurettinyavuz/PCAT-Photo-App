@@ -70,6 +70,13 @@ app.post('/photos', async (req, res) => {
   });
 });
 
+
+app.get('/photos/edit/:id', (req, res) => {
+  res.render('edit');
+});
+
+
+
 const port = 3000;
 app.listen(port, () => {
   console.log(`Sunucu ${port} portunda baslatildi...`);
