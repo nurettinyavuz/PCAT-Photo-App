@@ -44,7 +44,8 @@
                             </div>    
                             <div class="p-4 tm-bg-gray tm-catalog-item-description">
                                 <h3 class="tm-text-primary mb-3 tm-catalog-item-title"><%= photos[i].title %> </h3>
-                                <p class="tm-catalog-item-text"><%= photos[i].description %> </p>
+                                <!-- fotoğraf açıklamasının karakter sayısı 20'den büyükse,  ilk 0. karakterinden başlayarak 100. karaktere kadar olan bir alt dizeyi alır ve sonuna "..." ekler.  -->
+                                <p class="tm-catalog-item-text"><%= photos[i].description.length >40 ? photos[i].description.substring(0, 100)+ "..." :photos[i].description %> </p> 
                             </div>
                         </div>  
                     
