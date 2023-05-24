@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const fileUpload = require('express-fileupload');
+const methodOverride = require('method-override');
 
 const ejs = require('ejs');
 const path = require('path');
@@ -23,6 +24,7 @@ app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true })); //obje olduğu için : kullandık // urlencoded url'deki data'yı okumayı sağlıyor
 app.use(express.json()); //URL'de kullanıcının girdiği veriyi JSON formatına çeviriyor
 app.use(fileUpload());
+app.use(methodOverride('_method'));
 
 //ROUTES
 app.get('/', async (req, res) => {
@@ -58,7 +60,7 @@ app.post('/photos', async (req, res) => {
     fs.mkdirSync(uploadDir); //Klasör yoksa, fs.mkdirSync yöntemi kullanılarak bu klasör oluşturulur
   }
 
-  let uploadeImage = req.files.image;//image yazmamızın nedeni yüklediğimiz kısmın name'nin image olması (add.ejs'de)
+  let uploadeImage = req.files.image; //image yazmamızın nedeni yüklediğimiz kısmın name'nin image olması (add.ejs'de)
   let uploadPath = __dirname + '/Public/uploads/' + uploadeImage.name; //Yüklenen fotoğraflar Public klasöründe uploads dosyası oluşturur ve içine yüklenir, uploadeImage.name ise dosyanın adı oluşturulur
   //uploads'ın sağına  / işareti koymazsak dosya yolunu bulamaz
   uploadeImage.mv(uploadPath, async () => {
@@ -70,11 +72,21 @@ app.post('/photos', async (req, res) => {
   });
 });
 
-
-app.get('/photos/edit/:id', (req, res) => {
-  res.render('edit');
+app.get('/photos/edit/:id', async (req, res) => {
+  const photo = await Photo.findByIdAndUpdate({ _id: req.params.id }); //Burada fotoğrafıın ID'sini yakalıyoruz
+  res.render('edit', {
+    photo,
+  });
 });
 
+app.put('/photos/:id', async (req, res) => {
+  const photo = await Photo.findByIdAndUpdate({ _id: req.params.id }); //Burada fotoğrafıın ID'sini yakalıyoruz
+  photo.title = req.body.title;
+  photo.description = req.body.description;
+  photo.save();
+
+  res.redirect(`/photos/${req.params.id}`);
+});
 
 
 const port = 3000;
