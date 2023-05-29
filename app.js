@@ -28,7 +28,7 @@ app.use(methodOverride('_method'));
 
 //ROUTES
 app.get('/', async (req, res) => {
-  //.sort('-dateCreated') bu kısım yeni ekleneni başa yazar ana sayfada
+  //.sort('-dateCreated') bu kısım yeni ekleneni başa yazar ana sayfada (- eklemesydik en son ekleneni en sona yazardı)
   const photos = await Photo.find({}).sort('-dateCreated'); //Fotoğrafları yakaladık //asenkron kullanmamızın nedeni işlem bitene kadar beklememesi lazım daha hızlı çalışması için çünkü zaman alan bir işlem
   res.render('index', {
     photos,
@@ -72,7 +72,7 @@ app.post('/photos', async (req, res) => {
   });
 });
 
-app.get('/photos/edit/:id', async (req, res) => {
+app.get('/photos/edit/:id', async (req, res) => { // Edit sayfasını açtık
   const photo = await Photo.findByIdAndUpdate({ _id: req.params.id }); //Burada fotoğrafıın ID'sini yakalıyoruz
   res.render('edit', {
     photo,
@@ -85,7 +85,7 @@ app.put('/photos/:id', async (req, res) => {
   photo.description = req.body.description;
   photo.save();
 
-  res.redirect(`/photos/${req.params.id}`);
+  res.redirect(`/photos/${req.params.id}`);//Update edildikten sonra yine o sayfaya gitmesini istedik 
 });
 
 
