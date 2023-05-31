@@ -24,7 +24,11 @@ app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true })); //obje olduğu için : kullandık // urlencoded url'deki data'yı okumayı sağlıyor
 app.use(express.json()); //URL'de kullanıcının girdiği veriyi JSON formatına çeviriyor
 app.use(fileUpload());
-app.use(methodOverride('_method'));
+app.use(
+  methodOverride('_method', {
+    methods: ['POST', 'GET'], //Hangi methodların Override edilmesi gerektiğini belirtmemiz gerekiyor,böylece request gönderebiliyoruz
+  })
+);
 
 //ROUTES
 app.get('/', async (req, res) => {
@@ -72,7 +76,8 @@ app.post('/photos', async (req, res) => {
   });
 });
 
-app.get('/photos/edit/:id', async (req, res) => { // Edit sayfasını açtık
+app.get('/photos/edit/:id', async (req, res) => {
+  // Edit sayfasını açtık
   const photo = await Photo.findByIdAndUpdate({ _id: req.params.id }); //Burada fotoğrafıın ID'sini yakalıyoruz
   res.render('edit', {
     photo,
@@ -85,9 +90,16 @@ app.put('/photos/:id', async (req, res) => {
   photo.description = req.body.description;
   photo.save();
 
-  res.redirect(`/photos/${req.params.id}`);//Update edildikten sonra yine o sayfaya gitmesini istedik 
+  res.redirect(`/photos/${req.params.id}`); //Update edildikten sonra yine o sayfaya gitmesini istedik
 });
 
+app.delete('/photos/:id', async (req, res) => {
+  const photo = await Photo.findOne({ _id: req.params.id }); //Photo modelini bulur
+  let deletedImage = __dirname + '/public' + photo.image;//silinecek fotoğrafın dosya yolunu oluşturur
+  fs.unlinkSync(deletedImage);//üst satırda dosyanın yolunu deletedImage'e fotoğrafın yolunu atadık sonra o yolu senkron olarak sildik senkron olarak silmemizin nedeni silmeden aşağı satıra geçmesini istemiyoruz
+  await Photo.findByIdAndRemove(req.params.id);// MongoDB veritabanında "Photo" modelini kullanarak fotoğrafın kaydını siler. 
+  res.redirect('/');
+});
 
 const port = 3000;
 app.listen(port, () => {
