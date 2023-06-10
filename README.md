@@ -1,1 +1,1 @@
-# PCAT-Photo-App
+# PCAT - Photo - App
